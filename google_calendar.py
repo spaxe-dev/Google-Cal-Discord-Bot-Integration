@@ -27,7 +27,7 @@ sent_event_ids = load_sent_event_ids()
 # Define fetch_events task
 @tasks.loop(seconds=15)  # Check for events every 15 seconds
 async def fetch_events():
-    channel_id = get_channel_id()  # Get the channel ID from config.py
+    channel_id = get_channel_id()
     if channel_id is None:
         print("Channel ID is not set. Use the `setup` command to set it.")
         return
@@ -68,14 +68,37 @@ async def fetch_events():
                 all_events.append((start, event['summary'], event_id))
 
     # Sort events by start time
-    all_events.sort(key=lambda x: x[0])  # Sort by the first element (start time)
+    all_events.sort(key=lambda x: x[0])
 
-    # Send messages in sorted order
+    if not all_events:
+        await channel.send("No upcoming events this week.")
+        return
+
+    # Sort events by start time
+    all_events.sort(key=lambda x: x[0])
+
+    # Single Embed
+    embed = discord.Embed(
+        title="Upcoming Events This Week",
+        description="Here are the upcoming events from your Google Calendar:",
+        color=discord.Color.blurple()
+    )
+
     for start, summary, event_id in all_events:
-        message = f"Upcoming event: {summary} at {start}"
-        await channel.send(message)
+        start_datetime = datetime.fromisoformat(start)
+        event_date = start_datetime.strftime('%A, %Y-%m-%d')  
+        event_time = start_datetime.strftime('%I:%M %p') 
+        
+        embed.add_field(
+            name=f"{summary}",
+            value=f"**Date**: {event_date}\n**Time**: {event_time}\n**----------------------**",
+            inline=False
+        )
+
+
         sent_event_ids.add(event_id)
         save_sent_event_ids(sent_event_ids)
+    await channel.send(embed=embed)
 
 def get_service():
     creds = None
