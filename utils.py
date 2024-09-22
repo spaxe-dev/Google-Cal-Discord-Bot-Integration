@@ -1,5 +1,4 @@
-import json
-import os
+import json, os
 
 def load_sent_event_ids():
     if os.path.exists('sent_events.json'):

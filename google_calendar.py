@@ -1,17 +1,11 @@
-import os
-import json
-import pytz
-import discord
+import os, json, pytz, discord
 from datetime import datetime, timedelta
 from discord.ext import tasks
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from utils import load_sent_event_ids, save_sent_event_ids
-from config import calendar_ids
-from config import channel_id
-from config import get_channel_id
-
+from config import calendar_ids, channel_id, get_channel_id
 # Global variable to store the bot instance
 bot = None
 
