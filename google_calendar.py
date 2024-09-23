@@ -169,7 +169,7 @@ async def fetch_today():
     for event in events:
         start_datetime = datetime.fromisoformat(event['start']['datetime'])
         event_date = start_datetime.strftime('%A, %Y-%m-%d')  
-        event_time = start_datetime.strftime('%I:%M %p'
+        event_time = start_datetime.strftime('%I:%M %p)
         sendingText += f'{event['id']} | summary: {event['summary']} | date: {event_date}| time: {event_time}'
     await channel.send(sendingText);
     # DONT SAVE THE EVENT IDS AS THIS COMMAND WILL NOT BE EXECUTED AUTOMATICALLY RATHER USED BY PEOPLE
